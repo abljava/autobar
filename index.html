@@ -29,12 +29,10 @@
 
     .container {
       width: 120px;
-      /* height: 320px; */
       padding: 25px;
       background-color: #000;
       border-bottom-right-radius: 20px;
       border-top-right-radius: 20px;
-      /* opacity: 0.5; */
     }
 
     .list {
@@ -69,34 +67,50 @@
           <img src="/img/icon-cny.svg" alt="иконка флаг китая">
           <p class="list-item-text impact-text">cny</p>
         </div>
-        <p>78,53₽</p>
+        <p id="rate-cny"></p>
       </li>
       <li>
         <div class="list-item">
           <img src="/img/icon-usd.svg" alt="иконка флаг китая">
           <p class="list-item-text impact-text">usd</p>
         </div>
-        <p>78,53₽</p>
+        <p id="rate-usd"></p>
       </li>
       <li>
         <div class="list-item">
           <img src="/img/icon-jpy.svg" alt="иконка флаг китая">
           <p class="list-item-text impact-text">jpy</p>
         </div>
-        <p>78,53₽</p>
+        <p id="rate-jpy"></p>
       </li>
       <li>
         <div class="list-item">
           <img src="/img/icon-krw.svg" alt="иконка флаг китая">
           <p class="list-item-text impact-text">krw</p>
         </div>
-        <p>78,53₽</p>
+        <p id="rate-krw">₽</p>
       </li>
     </ul>
   </div>
 
   <script>
-    console.log(CBRMoney);
+    fetch('https://www.cbr-xml-daily.ru/latest.js')
+      .then(res => res.json())
+      .then(data => {
+        const rates = data.rates;
+
+        const rateCny = document.getElementById('rate-cny');
+        const rateUsd = document.getElementById('rate-usd');
+        const rateJpy = document.getElementById('rate-jpy');
+        const rateKrw = document.getElementById('rate-krw');
+
+        rateCny.textContent = (1 / rates.CNY).toFixed(2) + '₽';
+        rateUsd.textContent = (1 / rates.USD).toFixed(2) + '₽';
+        rateJpy.textContent = (1 / rates.JPY).toFixed(2) + '₽';
+        rateKrw.textContent = (1 / rates.KRW).toFixed(2) + '₽';
+      })
+      .catch(err => console.error('Ошибка получения курсов валют:', err));
+
   </script>
 </body>
 
