@@ -5,9 +5,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Document</title>
-
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;700&display=swap" rel="stylesheet" />
   <script src="https://www.cbr-xml-daily.ru/money.js"></script>
+</head>
+
+
+<body class="bg">
   <style>
     body {
       font-family: 'Geist', sans-serif;
@@ -31,7 +34,8 @@
     .container {
       width: 120px;
       padding: 25px;
-      background-color:  rgba(0, 0, 0, 0.3);;
+      background-color: rgba(0, 0, 0, 0.3);
+      ;
       border-bottom-right-radius: 20px;
       border-top-right-radius: 20px;
     }
@@ -57,39 +61,40 @@
       padding: 0;
     }
   </style>
-</head>
 
-
-<body class="bg">
   <div class="container">
     <ul class="list">
       <li>
         <div class="list-item">
-          <img src="/img/icon-cny.svg" alt="иконка флаг китая">
+          <img src="https://static.tildacdn.info/tild6430-6562-4364-b337-363232333862/image_6.svg"
+            alt="иконка флаг Китая">
           <p class="list-item-text impact-text">cny</p>
         </div>
         <p id="rate-cny"></p>
       </li>
       <li>
         <div class="list-item">
-          <img src="/img/icon-usd.svg" alt="иконка флаг китая">
+          <img src="https://static.tildacdn.info/tild3834-6230-4538-a335-396532393339/image_6.svg"
+            alt="иконка флаг США">
           <p class="list-item-text impact-text">usd</p>
         </div>
         <p id="rate-usd"></p>
       </li>
       <li>
         <div class="list-item">
-          <img src="/img/icon-jpy.svg" alt="иконка флаг китая">
+          <img src="https://static.tildacdn.info/tild3535-3065-4235-a565-333539666635/image_6.svg"
+            alt="иконка флаг Китая">
           <p class="list-item-text impact-text">jpy</p>
         </div>
         <p id="rate-jpy"></p>
       </li>
       <li>
         <div class="list-item">
-          <img src="/img/icon-krw.svg" alt="иконка флаг китая">
+          <img src="https://static.tildacdn.info/tild3631-3330-4461-a166-316230326664/image_6.svg"
+            alt="иконка флаг Кореи">
           <p class="list-item-text impact-text">krw</p>
         </div>
-        <p id="rate-krw">₽</p>
+        <p id="rate-krw"></p>
       </li>
     </ul>
   </div>
@@ -110,8 +115,13 @@
         rateJpy.textContent = (1 / rates.JPY).toFixed(2) + '₽';
         rateKrw.textContent = (1 / rates.KRW).toFixed(2) + '₽';
       })
-      .catch(err => console.error('Ошибка получения курсов валют:', err));
-
+      .catch(err => {
+        if (retry > 0) {
+          setTimeout(() => fetchRates(retry - 1), 100000);
+        } else {
+          console.error('Ошибка получения курсов валют:', err);
+        }
+      });
   </script>
 </body>
 

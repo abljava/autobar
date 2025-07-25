@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;700&display=swap" rel="stylesheet" />
+  <script src="https://www.cbr-xml-daily.ru/money.js"></script>
+</head>
+
+<body>
+  <style>
+    body {
+      font-family: 'Geist', sans-serif;
+      font-size: 20px;
+      background-color: #1C1C1C;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .impact-text {
+      font-family: 'Impact', sans-serif;
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+
+    .container {
+      width: 1200px;
+    }
+
+    .title {}
+
+    .filter-container {
+      display: flex;
+      gap: 12px;
+      align-items: end;
+      justify-content: flex-start;
+      padding: 32px 42px 46px;
+      border: 1px solid #333;
+      border-radius: 12px;
+      margin-bottom: 32px;
+    }
+
+    .filter-title {
+      color: #9C9C9C;
+      font-size: 16px;
+    }
+
+    .filter-select,
+    .filter-input {
+      padding: 18px 30px;
+      border-radius: 6px;
+      border: 1px solid #444;
+      font-size: 16px;
+      background: #ffffff;
+      color: #000000;
+      outline: none;
+    }
+
+    .filter-select {
+      width: 275px;
+    }
+
+    .filter-input {
+      width: 132px;
+    }
+
+    .filter-btn {
+      padding: 13px 30px;
+      border-radius: 6px;
+      border: none;
+      background: #E12525;
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .filter-btn:hover {
+      background: #b71c1c;
+    }
+  </style>
+
+  <div class="container">
+    <h1 class="impact-text">авто из японии</h1>
+    <div class="filter-container">
+      <div>
+        <span class="filter-title">Марка</span>
+        <select class="filter-select">
+          <option>Toyota</option>
+          <option>Honda</option>
+          <option>Subaru</option>
+        </select>
+      </div>  
+      <div>
+        <span class="filter-title">Модель</span>
+        <select class="filter-select">
+        </select>
+      </div>
+      <div>
+        <span class="filter-title">Год выпуска</span>
+        <input class="filter-input" type="number" placeholder="от">
+      </div>
+      <div>
+        <span class="filter-title"> </span>
+        <input class="filter-input" type="number" placeholder="до">
+      </div>
+      <button class="filter-btn impact-text">Показать авто</button>
+    </div>
+
+
+  </div>
+
+  <script type="module">
+    import { catalogJapan, catalogKorea, catalogChina } from './catalog.js';
+
+    // const container = document.querySelector('.container');
+    // catalogJapan.forEach(car => {
+    //   const card = document.createElement('div');
+    //   card.className = 'car-card';
+    //   card.innerHTML = `
+    //     <h3>${car.brand} ${car.model}</h3>
+    //     <p>Годы выпуска: ${car.year.join(', ')}</p>
+    //     <p>Цена: ${car.price}</p>
+    //     <img src="${car.image}" alt="${car.brand} ${car.model}" />
+    //   `;
+    //   container.appendChild(card);
+    // });
+  </script>
+
+
+</body>
+
+</html>

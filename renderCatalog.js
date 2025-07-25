@@ -1,0 +1,2 @@
+import { catalogChina } from "./catalog";
+
