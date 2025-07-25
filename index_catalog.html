@@ -88,6 +88,28 @@
     .filter-btn:hover {
       background: #b71c1c;
     }
+
+    .cards-container {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      max-width: 380px;
+      border-radius: 30px;
+      border: 1px solid #444;
+
+    }
+
+    .card-img {
+      width: 100%;
+      object-fit: cover;
+      border-radius: 30px;
+
+    }
+
   </style>
 
   <div class="container">
@@ -95,15 +117,12 @@
     <div class="filter-container">
       <div>
         <span class="filter-title">Марка</span>
-        <select class="filter-select">
-          <option>Toyota</option>
-          <option>Honda</option>
-          <option>Subaru</option>
+        <select id="brand-select" class="filter-select">
         </select>
-      </div>  
+      </div>
       <div>
         <span class="filter-title">Модель</span>
-        <select class="filter-select">
+        <select id="model-select" class="filter-select">
         </select>
       </div>
       <div>
@@ -116,25 +135,122 @@
       </div>
       <button class="filter-btn impact-text">Показать авто</button>
     </div>
+    <div class="cards-container">
+
+    </div>
 
 
   </div>
 
-  <script type="module">
-    import { catalogJapan, catalogKorea, catalogChina } from './catalog.js';
+  <script>
 
-    // const container = document.querySelector('.container');
-    // catalogJapan.forEach(car => {
-    //   const card = document.createElement('div');
-    //   card.className = 'car-card';
-    //   card.innerHTML = `
-    //     <h3>${car.brand} ${car.model}</h3>
-    //     <p>Годы выпуска: ${car.year.join(', ')}</p>
-    //     <p>Цена: ${car.price}</p>
-    //     <img src="${car.image}" alt="${car.brand} ${car.model}" />
-    //   `;
-    //   container.appendChild(card);
-    // });
+    const catalogJapan = [
+      {
+        id: 1,
+        brand: "Toyota",
+        model: "Harrier 4wd",
+        year: [2020, 2021, 2022],
+        price: 0,
+        image: "img/photo/toyota-harrier.webp",
+      },
+      {
+        id: 2,
+        brand: "Subaru",
+        model: "Levorg sti",
+        year: [2020, 2021, 2022],
+        price: 0,
+        image: "img/photo/subaru-levorg.png",
+      },
+      {
+        id: 3,
+        brand: "Subaru",
+        model: "XV",
+        year: [2020, 2021, 2022],
+        price: 0,
+        image: "img/photo/subaru-xv.png",
+      },
+      {
+        id: 4,
+        brand: "Toyota",
+        model: "TLC Prado",
+        year: [2020, 2021, 2022],
+        price: 0,
+        image: "img/photo/tlc-prado.webp",
+      },
+      {
+        id: 5,
+        brand: "Honda",
+        model: "Freed",
+        year: [2020, 2021, 2022],
+        price: 0,
+        image: "img/photo/honda-freed.png",
+      },
+      {
+        id: 6,
+        brand: "Honda",
+        model: "Stepwgn Spada",
+        year: [2020, 2021, 2022],
+        price: 0,
+        image: "img/photo/honda-stepwgn.png",
+      },
+      {
+        id: 7,
+        brand: "Honda",
+        model: "CR-V",
+        year: [2020, 2021, 2022],
+        price: 0,
+        image: "img/photo/honda-crv.png",
+      },
+      {
+        id: 8,
+        brand: "Subaru",
+        model: "Forester",
+        year: [2020, 2021, 2022],
+        price: 0,
+        image: "img/photo/subaru-forester.webp",
+      },
+      {
+        id: 9,
+        brand: "Toyota",
+        model: "Rav4",
+        year: [2020, 2021, 2022],
+        price: 0,
+        image: "img/photo/toyota-rav4.png",
+      },
+    ];
+
+    const brands = [...new Set(catalogJapan.map(car => car.brand))];
+    const models = [...new Set(catalogJapan.map(car => car.model))];
+    const brandSelect = document.getElementById('brand-select');
+    const modelSelect = document.getElementById('model-select');
+
+    brands.forEach(brand => {
+      const option = document.createElement('option');
+      option.value = brand;
+      option.textContent = brand;
+      brandSelect.appendChild(option);
+    });
+
+    models.forEach(model => {
+      const option = document.createElement('option');
+      option.value = model;
+      option.textContent = model;
+      modelSelect.appendChild(option);
+    });
+
+
+    const cardsList = document.querySelector('.cards-container');
+    catalogJapan.forEach(car => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <h3>${car.brand} ${car.model}</h3>
+        <p>Годы выпуска: ${car.year.join(', ')}</p>
+        <p>Цена: ${car.price}</p>
+        <img src="${car.image}" alt="${car.brand} ${car.model}" class="card-img" />
+      `;
+      cardsList.appendChild(card);
+    });
   </script>
 
 
