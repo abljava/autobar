@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;700&display=swap" rel="stylesheet" />
+  <script src="https://www.cbr-xml-daily.ru/money.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+
+<body>
+  <style>
+    body {
+      font-family: "Geist", sans-serif;
+      font-size: 20px;
+      background-color: #1c1c1c;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .impact-text {
+      font-family: "Impact", sans-serif;
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+
+    .container {
+      width: 1200px;
+    }
+
+    .title {}
+
+    .filter-container {
+      display: grid;
+      grid-template-columns: repeat(2, 275px) 1fr 1fr 20%;
+      gap: 12px;
+      align-items: end;
+      justify-content: flex-start;
+      padding: 32px 42px 46px;
+      border: 1px solid #333;
+      border-radius: 12px;
+      margin-bottom: 32px;
+    }
+
+    .filter-title {
+      color: #9c9c9c;
+      font-size: 16px;
+    }
+
+    .filter-select,
+    .filter-input {
+      padding: 18px 30px;
+      border-radius: 6px;
+      border: 1px solid #444;
+      font-size: 16px;
+      background: #ffffff;
+      color: #000000;
+      outline: none;
+    }
+
+    .filter-select {
+      width: 275px;
+    }
+
+    .filter-input {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .filter-btn {
+      padding: 13px 30px;
+      border-radius: 6px;
+      border: none;
+      background: #CB2A2A;
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .filter-btn:hover {
+      background: #b71c1c;
+    }
+
+    /* Стили для модального окна */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 5% auto;
+      padding: 40px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+      color: #000;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      cursor: pointer;
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #000;
+    }
+
+    .modal-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      color: #000;
+    }
+
+    .modal-description {
+      color: #666;
+      margin-bottom: 25px;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    .modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .modal-input {
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .modal-input:focus {
+      border-color: #CB2A2A;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 15px 20px;
+      background: #CB2A2A;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 20px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: background 0.3s;
+    }
+
+    .modal-btn:hover {
+      background: #b71c1c;
+    }
+
+    .modal-btn-arrow {
+      width: 52px;
+      height: 53px;
+      background: #CB2A2A;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s;
+    }
+
+    .modal-btn-arrow:hover {
+      background: #b71c1c;
+    }
+
+    .arrow-icon {
+      color: #fff;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .modal-footer {
+      font-size: 12px;
+      color: #666;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .privacy-link {
+      color: #CB2A2A;
+      text-decoration: underline;
+    }
+
+    .privacy-link:hover {
+      color: #b71c1c;
+    }
+
+    .cards-container {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      max-width: 380px;
+      border-radius: 30px;
+      border: 1px solid #444;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      border-radius: 30px;
+    }
+
+    .card-info {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding: 27px 30px;
+    }
+
+    .card-title {
+      color: #808080;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      background: #CB2A2A;
+      color: #fff;
+      font-size: 20px;
+      padding: 18px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: #b71c1c;
+    }
+
+    .btn-arrow {
+      background: #CB2A2A;
+      padding: 10px 12px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .btn-arrow:hover {
+      background: #b71c1c;
+    }
+
+    .btn-icon {
+      width: 33px;
+    }
+  </style>
+
+  <!-- Модальное окно с формой заявки -->
+  <div id="applicationModal" class="modal">
+    <div class="modal-content">
+      <span class="close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </span>
+      <h2 class="modal-title">ОСТАВЬТЕ ЗАЯВКУ</h2>
+      <p class="modal-description">Наш менеджер оперативно ответит на все вопросы и поможет выбрать авто мечты</p>
+      <form class="modal-form">
+        <input type="text" placeholder="Введите имя" class="modal-input" required>
+        <input type="tel" placeholder="Введите телефон" class="modal-input" required>
+        <div class="modal-buttons">
+          <button type="submit" class="modal-btn impact-text">ОСТАВИТЬ ЗАЯВКУ</button>
+          <button type="button" class="modal-btn-arrow">
+            <img src="https://static.tildacdn.com/tild3937-3962-4661-a436-616564326366/Group_5102.svg"
+              class="btn-icon" />
+          </button>
+        </div>
+      </form>
+      <p class="modal-footer">Нажимая кнопку, вы соглашаетесь с <a href="https://autobarnhk.ru/privacy
+        " class="privacy-link">политикой
+          конфиденциальности</a></p>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1 class="impact-text">авто из японии</h1>
+    <div class="filter-container">
+      <div>
+        <span class="filter-title">Марка</span>
+        <select id="brand-select" class="filter-select"></select>
+      </div>
+      <div>
+        <span class="filter-title">Модель</span>
+        <select id="model-select" class="filter-select"></select>
+      </div>
+      <div>
+        <span class="filter-title">Год выпуска</span>
+        <input class="filter-input" type="number" placeholder="от" />
+      </div>
+      <div>
+        <span class="filter-title"> </span>
+        <input class="filter-input" type="number" placeholder="до" />
+      </div>
+      <button class="filter-btn impact-text">Показать авто</button>
+    </div>
+    <div class="cards-container"></div>
+  </div>
+
+  <script>
+    // Блок с карточками
+    const catalogJapan = [
+      {
+        id: 1,
+        brand: "Toyota",
+        model: "Harrier 4wd",
+        year: 2020,
+        price: 780000,
+        image: "https://optim.tildacdn.com/tild3466-6234-4231-b832-616637376238/-/cover/464x382/center/center/-/format/webp/toyota-harrier.webp",
+      },
+      {
+        id: 2,
+        brand: "Subaru",
+        model: "Levorg sti",
+        year: 2022,
+        price: 780000,
+        image: "https://optim.tildacdn.com/tild3131-6335-4563-a632-613337353062/-/cover/464x382/center/center/-/format/webp/subaru-levorg.webp",
+      },
+      {
+        id: 3,
+        brand: "Subaru",
+        model: "XV",
+        year: 2021,
+        price: 780000,
+        image: "https://optim.tildacdn.com/tild3139-3034-4764-b865-313731663563/-/cover/464x382/center/center/-/format/webp/subaru-xv.webp",
+      },
+      {
+        id: 4,
+        brand: "Toyota",
+        model: "TLC Prado",
+        year: 2022,
+        price: 780000,
+        image: "https://optim.tildacdn.com/tild6535-3534-4065-a633-653166653634/-/cover/464x382/center/center/-/format/webp/tlc-prado.webp",
+      },
+      {
+        id: 5,
+        brand: "Honda",
+        model: "Freed",
+        year: 2022,
+        price: 780000,
+        image: "https://optim.tildacdn.com/tild3935-3466-4666-b731-313039356661/-/cover/464x382/center/center/-/format/webp/honda-freed.webp",
+      },
+      {
+        id: 6,
+        brand: "Honda",
+        model: "Stepwgn Spada",
+        year: 2020,
+        price: 780000,
+        image: "https://optim.tildacdn.com/tild3931-6361-4236-a133-643933333266/-/cover/464x382/center/center/-/format/webp/honda-stepwgn.webp",
+      },
+      {
+        id: 7,
+        brand: "Honda",
+        model: "CR-V",
+        year: 2020,
+        price: 780000,
+        image: "https://static.tildacdn.com/tild3838-3137-4434-b834-313635393561/honda-crv.webp",
+      },
+      {
+        id: 8,
+        brand: "Subaru",
+        model: "Forester",
+        year: 2022,
+        price: 780000,
+        image: "https://optim.tildacdn.com/tild3131-6335-4563-a632-613337353062/-/cover/464x382/center/center/-/format/webp/subaru-levorg.webp",
+      },
+      {
+        id: 9,
+        brand: "Toyota",
+        model: "Rav4",
+        year: 2021,
+        price: 780000,
+        image: "https://optim.tildacdn.com/tild6164-6433-4962-a239-623532326638/-/cover/464x382/center/center/-/format/webp/toyota-rav4.webp",
+      },
+    ];
+
+    const brandsJapan = [...new Set(catalogJapan.map((car) => car.brand))];
+    const modelsJapan = [...new Set(catalogJapan.map((car) => car.model))];
+    const brandSelect = document.getElementById("brand-select");
+    const modelSelect = document.getElementById("model-select");
+
+    // Функция для обновления списка моделей в зависимости от выбранной марки
+    function updateModels() {
+      const selectedBrand = brandSelect.value;
+
+      // Очищаем текущий список моделей
+      modelSelect.innerHTML = '<option value="">Все модели</option>';
+
+      if (selectedBrand) {
+        // Получаем модели только для выбранной марки
+        const filteredModels = [...new Set(
+          catalogJapan
+            .filter(car => car.brand === selectedBrand)
+            .map(car => car.model)
+        )];
+
+        // Добавляем модели в селект
+        filteredModels.forEach((model) => {
+          const option = document.createElement("option");
+          option.value = model;
+          option.textContent = model;
+          modelSelect.appendChild(option);
+        });
+      } else {
+        // Если марка не выбрана, показываем все модели
+        modelsJapan.forEach((model) => {
+          const option = document.createElement("option");
+          option.value = model;
+          option.textContent = model;
+          modelSelect.appendChild(option);
+        });
+      }
+    }
+
+    // Инициализация селектов
+    brandSelect.innerHTML = '<option value="">Все марки</option>';
+    brandsJapan.forEach((brand) => {
+      const option = document.createElement("option");
+      option.value = brand;
+      option.textContent = brand;
+      brandSelect.appendChild(option);
+    });
+
+    updateModels(); // Инициализируем модели
+
+    // Обработчик изменения марки
+    brandSelect.addEventListener("change", updateModels);
+
+    // Функция для фильтрации карточек
+    function filterCards() {
+      const selectedBrand = brandSelect.value;
+      const selectedModel = modelSelect.value;
+      const yearFrom = document.querySelector('input[placeholder="от"]').value;
+      const yearTo = document.querySelector('input[placeholder="до"]').value;
+
+      const cards = document.querySelectorAll(".card");
+
+      cards.forEach((card) => {
+        const cardData = card.dataset;
+        const carBrand = cardData.brand;
+        const carModel = cardData.model;
+        const carYear = parseInt(cardData.year);
+
+        let showCard = true;
+
+        // Фильтр по марке
+        if (selectedBrand && carBrand !== selectedBrand) {
+          showCard = false;
+        }
+
+        // Фильтр по модели
+        if (selectedModel && carModel !== selectedModel) {
+          showCard = false;
+        }
+
+        // Фильтр по году выпуска
+        if (yearFrom && carYear < parseInt(yearFrom)) {
+          showCard = false;
+        }
+        if (yearTo && carYear > parseInt(yearTo)) {
+          showCard = false;
+        }
+
+        // Показываем или скрываем карточку
+        card.style.display = showCard ? "block" : "none";
+      });
+    }
+
+    // Обработчик кнопки "Показать авто"
+    document.querySelector(".filter-btn").addEventListener("click", filterCards);
+
+    // Обработчики изменения фильтров
+    brandSelect.addEventListener("change", filterCards);
+    modelSelect.addEventListener("change", filterCards);
+    document.querySelector('input[placeholder="от"]').addEventListener("input", filterCards);
+    document.querySelector('input[placeholder="до"]').addEventListener("input", filterCards);
+
+    const cardsList = document.querySelector(".cards-container");
+    catalogJapan.forEach((car) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      // Добавляем данные для фильтрации
+      card.dataset.brand = car.brand;
+      card.dataset.model = car.model;
+      card.dataset.year = car.year;
+      card.innerHTML = `
+        <img src="${car.image}" alt="${car.brand} ${car.model
+        }" class="card-img" />
+        <div class="card-info">
+          <h3 class="card-title impact-text">${car.brand} ${car.model}, ${car.year}</h3>
+          <p>от ${car.price} ¥</p>
+          <div class="button-container ">
+           <button class="btn impact-text">Рассчитать стоимость</button>
+           <button class="btn-arrow">
+             <img src="https://static.tildacdn.com/tild3937-3962-4661-a436-616564326366/Group_5102.svg" class="btn-icon"/>
+           </button>
+          </div>
+        </div>
+        
+      `;
+      cardsList.appendChild(card);
+    });
+
+    // JavaScript для модального окна
+    const modal = document.getElementById("applicationModal");
+    const closeBtn = document.querySelector(".close");
+    const modalForm = document.querySelector(".modal-form");
+
+    function openModal() {
+      modal.style.display = "block";
+      document.body.style.overflow = "hidden"; // Запрещаем прокрутку страницы
+    }
+
+    function closeModal() {
+      modal.style.display = "none";
+      document.body.style.overflow = "auto"; // Возвращаем прокрутку страницы
+    }
+
+    // Обработчик клика на кнопку закрытия
+    closeBtn.addEventListener("click", closeModal);
+
+    // Обработчик клика по оверлею для его закрытия
+    window.addEventListener("click", function (event) {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Инициализация EmailJS
+    (function () {
+      emailjs.init("YOUR_PUBLIC_KEY"); // Замените на ваш публичный ключ EmailJS
+    })();
+
+    // Обработчик отправки формы
+    modalForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const formData = new FormData(modalForm);
+      const name = modalForm.querySelector('input[type="text"]').value;
+      const phone = modalForm.querySelector('input[type="tel"]').value;
+
+      // Показываем индикатор загрузки
+      const submitBtn = modalForm.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = "Отправка...";
+      submitBtn.disabled = true;
+
+      // Параметры для отправки email
+      const templateParams = {
+        to_email: "autobarnahodka@yandex.ru",
+        from_name: name,
+        from_phone: phone,
+        message: `Новая заявка с сайта!\n\nИмя: ${name}\nТелефон: ${phone}\n\nДата: ${new Date().toLocaleString('ru-RU')}`
+      };
+
+      // Отправка email через EmailJS
+      emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+        .then(function (response) {
+          console.log("Email успешно отправлен:", response);
+
+          // Показываем сообщение об успешной отправке
+          alert("Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.");
+          closeModal();
+
+          // Очищаем форму
+          modalForm.reset();
+        })
+        .catch(function (error) {
+          console.error("Ошибка отправки email:", error);
+
+          // Показываем сообщение об ошибке
+          alert("Произошла ошибка при отправке заявки. Пожалуйста, попробуйте еще раз или свяжитесь с нами по телефону.");
+        })
+        .finally(function () {
+          // Восстанавливаем кнопку
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+        });
+    });
+
+    // Добавляем обработчики кликов на кнопки в карточках
+    document.addEventListener("click", function (e) {
+      if (e.target.classList.contains("btn") || e.target.classList.contains("btn-arrow") || e.target.closest(".btn-arrow")) {
+        openModal();
+      }
+    });
+  </script>
+</body>
+
+</html>
+
+
+// dprtqpmhcmskcaju
+
+ywbeuiuxctbvwyja
